@@ -174,16 +174,22 @@ class _StoryOpenerState<T> extends State<StoryOpener> {
 
   @override
   Widget build(BuildContext context) {
+    final Widget closedWidget = widget.closedBuilder(
+      context,
+      _open,
+    );
+    widget.controller._syncWidget(
+      index: widget.index,
+      widget: closedWidget,
+    );
+
     return _Hideable(
       key: widget.controller._indexKeys[widget.index],
       child: Material(
         color: Colors.transparent,
         shape: widget.closedShape,
         clipBehavior: widget.clipBehavior,
-        child: widget.closedBuilder(
-          context,
-          _open,
-        ),
+        child: closedWidget,
       ),
     );
   }

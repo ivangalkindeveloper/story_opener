@@ -11,7 +11,7 @@ final class StoryOpenerController {
   }) =>
       _indexKeys[index] = StoryOpenerKey();
 
-  void syncWidget({
+  void _syncWidget({
     required int index,
     required Widget widget,
   }) =>

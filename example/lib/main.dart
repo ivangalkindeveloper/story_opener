@@ -73,20 +73,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   closedBuilder: (
                     BuildContext context,
                     void Function() openStory,
-                  ) {
-                    final GestureDetector card = GestureDetector(
-                      onTap: openStory,
-                      child: StoryCard(
-                        color: _colors[index],
-                      ),
-                    );
-                    _storyOpenerController.syncWidget(
-                      index: index,
-                      widget: card,
-                    );
-
-                    return card;
-                  },
+                  ) =>
+                      GestureDetector(
+                    onTap: openStory,
+                    child: StoryCard(
+                      color: _colors[index],
+                    ),
+                  ),
                   openBuilder: (
                     BuildContext context,
                     void Function(int) closeStory,
