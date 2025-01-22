@@ -28,28 +28,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Map<int, StoryOpenerItem> _indexItems = {
-    0: StoryOpenerItem(
-      child: StoryCard(
-        color: Colors.lightBlue,
-      ),
-    ),
-    1: StoryOpenerItem(
-      child: StoryCard(
-        color: Colors.yellow,
-      ),
-    ),
-    2: StoryOpenerItem(
-      child: StoryCard(
-        color: Colors.deepOrange,
-      ),
-    ),
-    3: StoryOpenerItem(
-      child: StoryCard(
-        color: Colors.indigo,
-      ),
-    ),
-  };
+  final StoryOpenerController _storyOpenerController = StoryOpenerController();
+  final List<Color> _colors = [
+    Colors.lightBlue,
+    Colors.yellow,
+    Colors.deepOrange,
+    Colors.indigo,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               height: 120,
               child: ListView.separated(
-                cacheExtent: _indexItems.length * 80,
+                cacheExtent: _colors.length * 80,
                 scrollDirection: Axis.horizontal,
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.symmetric(
@@ -78,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ) =>
                     StoryOpener(
                   index: index,
-                  indexItems: _indexItems,
+                  controller: _storyOpenerController,
                   closedShape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),
@@ -88,11 +73,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   closedBuilder: (
                     BuildContext context,
                     void Function() openStory,
-                  ) =>
-                      GestureDetector(
-                    onTap: openStory,
-                    child: _indexItems[index]!.child,
-                  ),
+                  ) {
+                    final GestureDetector card = GestureDetector(
+                      onTap: openStory,
+                      child: StoryCard(
+                        color: _colors[index],
+                      ),
+                    );
+                    _storyOpenerController.syncWidget(
+                      index: index,
+                      widget: card,
+                    );
+
+                    return card;
+                  },
                   openBuilder: (
                     BuildContext context,
                     void Function(int) closeStory,
@@ -108,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     SizedBox(
                   width: 8,
                 ),
-                itemCount: _indexItems.length,
+                itemCount: _colors.length,
               ),
             ),
           ],

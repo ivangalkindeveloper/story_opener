@@ -3,7 +3,7 @@ part of 'story_opener.dart';
 class _Route<T> extends ModalRoute<T> {
   _Route({
     required this.index,
-    required this.indexItems,
+    required this.storyController,
     required this.hideableKey,
     required this.openBuilder,
     required ShapeBorder closedShape,
@@ -11,7 +11,7 @@ class _Route<T> extends ModalRoute<T> {
     required this.transitionDuration,
     required this.useRootNavigator,
     required RouteSettings? routeSettings,
-  })  : closedWidget = indexItems[index]!.child,
+  })  : closedWidget = storyController._indexWidgets[index],
         _shapeTween = ShapeBorderTween(
           begin: closedShape,
           end: openShape,
@@ -49,10 +49,10 @@ class _Route<T> extends ModalRoute<T> {
       );
 
   final int index;
-  final Map<int, StoryOpenerItem> indexItems;
+  final StoryOpenerController storyController;
   final GlobalKey<StoryOpenerHideableState> hideableKey;
   GlobalKey<StoryOpenerHideableState>? popedKey;
-  Widget closedWidget;
+  Widget? closedWidget;
 
   final Widget Function(
     BuildContext context,
@@ -129,16 +129,15 @@ class _Route<T> extends ModalRoute<T> {
 
   @override
   bool didPop(T? result) {
-    if (result is int && indexItems[result] != null) {
-      final StoryOpenerItem poppedItem = indexItems[result]!;
-      popedKey = poppedItem.key;
+    if (result is int && storyController._indexKeys[result] != null) {
+      popedKey = storyController._indexKeys[result];
+      closedWidget = storyController._indexWidgets[result];
       popedKey!.currentState!
         ..placeholderSize = null
         ..isVisible = false;
       hideableKey.currentState!
         ..placeholderSize = null
         ..isVisible = true;
-      closedWidget = poppedItem.child;
     }
     _takeMeasurements(
       navigatorContext: subtreeContext!,

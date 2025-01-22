@@ -7,7 +7,7 @@ import 'package:flutter/scheduler.dart';
 
 part 'hideable.dart';
 part 'route.dart';
-part 'story_opener_item.dart';
+part 'story_opener_controller.dart';
 
 typedef StoryOpenerKey = GlobalKey<StoryOpenerHideableState>;
 
@@ -35,7 +35,7 @@ class StoryOpener extends StatefulWidget {
   const StoryOpener({
     super.key,
     required this.index,
-    required this.indexItems,
+    required this.controller,
     required this.closedBuilder,
     required this.openBuilder,
     this.closedShape = const RoundedRectangleBorder(),
@@ -52,7 +52,7 @@ class StoryOpener extends StatefulWidget {
   final int index;
 
   /// Map if indexed items
-  final Map<int, StoryOpenerItem> indexItems;
+  final StoryOpenerController controller;
 
   /// Called to obtain the child for the container in the closed state.
   ///
@@ -143,13 +143,13 @@ class StoryOpener extends StatefulWidget {
 }
 
 class _StoryOpenerState<T> extends State<StoryOpener> {
-  // Key used in [_OpenContainerRoute] to hide the widget returned by
-  // [OpenContainer.openBuilder] in the source route while the container is
-  // opening/open. A copy of that widget is included in the
-  // [_OpenContainerRoute] where it fades out. To avoid issues with double
-  // shadows and transparency, we hide it in the source route.
-  final GlobalKey<StoryOpenerHideableState> _hideableKey =
-      GlobalKey<StoryOpenerHideableState>();
+  @override
+  void initState() {
+    super.initState();
+    widget.controller._addKey(
+      index: widget.index,
+    );
+  }
 
   Future<void> _open() async {
     widget.onOpen?.call();
@@ -159,11 +159,11 @@ class _StoryOpenerState<T> extends State<StoryOpener> {
     ).push(
       _Route(
         index: widget.index,
-        indexItems: widget.indexItems,
+        storyController: widget.controller,
         closedShape: widget.closedShape,
         openBuilder: widget.openBuilder,
         openShape: widget.openShape,
-        hideableKey: _hideableKey,
+        hideableKey: widget.controller._indexKeys[widget.index]!,
         transitionDuration: widget.transitionDuration,
         useRootNavigator: widget.useRootNavigator,
         routeSettings: widget.routeSettings,
@@ -175,17 +175,14 @@ class _StoryOpenerState<T> extends State<StoryOpener> {
   @override
   Widget build(BuildContext context) {
     return _Hideable(
-      key: widget.indexItems[widget.index]!.key,
-      child: _Hideable(
-        key: _hideableKey,
-        child: Material(
-          color: Colors.transparent,
-          shape: widget.closedShape,
-          clipBehavior: widget.clipBehavior,
-          child: widget.closedBuilder(
-            context,
-            _open,
-          ),
+      key: widget.controller._indexKeys[widget.index],
+      child: Material(
+        color: Colors.transparent,
+        shape: widget.closedShape,
+        clipBehavior: widget.clipBehavior,
+        child: widget.closedBuilder(
+          context,
+          _open,
         ),
       ),
     );
