@@ -1,5 +1,6 @@
 ## Story Opener
 Package provides widgets for open/close like stories with TweenSequence animation:
+
 ![Demo](asset/demo.gif)
 
 ## Usage
@@ -35,6 +36,9 @@ In the closed state, a closure is passed that accepts an int parameter - this is
 
 Done.
 The logic of the transition inside different stories should be located only inside the widget of the open state and it has nothing to do with the current package for the animation of opening and closing stories.
+
+## Acknowledgments
+A huge thanks to the authors of the [animations](https://pub.dev/packages/animations) package, since the basis of the code is taken from this package and the OpenContainer resource.
 
 ## Additional information
 For more details see example project. And feel free to open an issue if you find any bugs or errors or suggestions.
