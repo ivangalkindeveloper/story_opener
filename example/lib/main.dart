@@ -139,31 +139,30 @@ class StoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+      backgroundColor: Colors.lightGreen,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: List.generate(
               4,
               (
                 int index,
               ) =>
-                  Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
                   Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 16,
-                    ),
-                    child: MaterialButton(
-                      child: Text(
-                        index.toString(),
-                      ),
-                      onPressed: () => closeStory(index),
-                    ),
+                padding: const EdgeInsets.only(
+                  bottom: 16,
+                ),
+                child: MaterialButton(
+                  elevation: 0,
+                  color: Colors.white30,
+                  child: Text(
+                    index.toString(),
                   ),
-                ],
+                  onPressed: () => closeStory(index),
+                ),
               ),
             ),
           ),
