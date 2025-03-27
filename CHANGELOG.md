@@ -1,5 +1,8 @@
+## 1.0.4
+* Update README;
+
 ## 1.0.3
-* Fill README;
+* Update README;
 * Small chaning of example;
 
 ## 1.0.2
